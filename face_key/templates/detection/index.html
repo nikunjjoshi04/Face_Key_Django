@@ -1,41 +1,105 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
+<!-- document getElementById  innerHTML -->
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>For JS</title>
+    <script>
+        function Show(){
+            document.getElementById('show_html').innerHTML = 'Hello...!'
+        }
+
+    </script>
+    <script
+            crossorigin="anonymous"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            src="https://code.jquery.com/jquery-3.4.1.min.js">
+    </script>
 </head>
 <body>
-<h2>Hello OpenCV.js</h2>
-<p id="status">OpenCV.js is loading...</p>
-<div>
-    <div class="inputoutput">
-        <img id="imageSrc" alt="No Image" height="200" width="200"/>
-        <div class="caption">imageSrc <input type="file" id="fileInput" name="file"/></div>
-    </div>
-    <div class="inputoutput">
-        <canvas id="canvasOutput" height="200" width="200"></canvas>
-        <div class="caption">canvasOutput</div>
-    </div>
-</div>
-<script type="text/javascript">
-    let imgElement = document.getElementById('imageSrc');
-    let inputElement = document.getElementById('fileInput');
-    inputElement.addEventListener('change', (e) => {
-      imgElement.src = URL.createObjectURL(e.target.files[0]);
-    }, false);
+<button id="btn_ajax">Ajax</button>
+<h1 id="name"></h1>
+<hr>
+<!--change html-->
+<button type="button" onclick="document.getElementById('time').innerHTML = Date()">Time</button>
+<p id="time"></p>
+<hr>
+<!--change src io img-->
+<img id="img" src="{% static 'images/c1.jpeg' %}" alt="">
+<button type="button" onclick="document.getElementById('img').src = '{% static 'images/c2.jpeg' %}'">Change Img</button>
+<hr>
+<!--change style-->
+<button type="button" onclick="document.getElementById('font').style.fontSize='35px'">Change Font Size</button>
+<p id="font">Nikunj Joshi</p>
+<hr>
+<!--change hide show -->
+<button type="button" onclick="document.getElementById('hide').style.display = 'none'">Hide</button>
+<button type="button" onclick="document.getElementById('hide').style.display = 'block'">Show</button>
+<p id="hide">Nikunj Joshi</p>
+<hr>
+<!--change show -->
+<button type="button" onclick="Show();">Show</button>
+<p id="show_html"></p>
 
-    imgElement.onload = function() {
-      let mat = cv.imread(imgElement);
-      cv.imshow('canvasOutput', mat);
-      mat.delete();
-    };
+<hr>
+<!--change show2 -->
+<button type="button" onclick="Show2();">Show2</button>
+<p id="show_html2"></p>
 
-    function onOpenCvReady() {
-      document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+<hr>
+<!--Arrow function -->
+<button type="button" onclick="hello();">Arrow Function</button>
+<p id="arrow"></p>
+
+
+<script>
+    function Show2(){
+        document.getElementById('show_html2').innerHTML = 'Nikunj...!';
     }
+    document.getElementById('name').innerHTML = 'Hello Nikunj...!';
+
+    var man = {
+        fname: 'nikunj',
+        lname: 'joshi',
+        age: 24,
+        mobile: '8347856135',
+        fullname: function(){
+            return this.fname + ' ' + this.lname;
+        }
+    }
+    console.info(man);
+    console.info(man.fname);
+    console.info(man.lname);
+    console.info(man.age);
+    console.info(man.mobile);
+    console.info(man.fullname());
+
+    var arr = ["Banana", "Orange", "Apple", "Mango"];
+    arr.forEach(ele);
+
+    function ele (value) {
+      console.info(value);
+    }
+
+    var hello = () => {
+        document.getElementById('arrow').innerHTML = 'Hello Nikka...!';
+        return 'Hello Nikka...!';
+    }
+    console.info(hello());
+
+    $("#btn_ajax").click(function (){
+        $.ajax({
+            url: "{% url 'detection:video_ajax' %}",
+            data: {
+                id: 'AJAX_SEND'
+            },
+            success: function(response){
+                console.info('AJAX_SUCCESS');
+                console.info(response.data);
+            }
+        });
+    });
 </script>
-<script async src="{% static 'js/opencv.js' %}" onload="onOpenCvReady();" type="text/javascript"></script>
 </body>
 </html>

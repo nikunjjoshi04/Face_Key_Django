@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hello OpenCV.js</title>
+    <script async src="{% static 'js/opencv.js' %}" onload="onOpenCvReady();" type="text/javascript"></script>
+</head>
+
+<body>
+
+<h2>Hello OpenCV.js</h2>
+<p id="status">OpenCV.js is loading...</p>
+<button id="start" onclick="start();">Strart</button>
+<div>
+    <div class="inputoutput">
+        <img id="imageSrc" src="{% static 'images/nikunj.jpg' %}" height="400" width="400" alt="No Image"/>
+    </div>
+    <div class="inputoutput">
+        <canvas id="canvasOutput1"></canvas>
+        <canvas id="canvasOutput"></canvas>
+        <div class="caption">canvasOutput</div>
+    </div>
+</div>
+
+<script>
+let imgElement = document.getElementById('imageSrc');
+
+console.info(imgElement);
+function onOpenCvReady() {
+    console.info('Ready');
+    document.getElementById('status').innerHTML = 'OpenCV.js is Ready...!'
+}
+
+function start() {
+    let src = cv.imread(imgElement);
+    cv.imshow('canvasOutput', src);
+    let gray = new cv.Mat();
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+    let faces = new cv.RectVector();
+
+    let faceCascade = new cv.CascadeClassifier();
+    let faceCascadeFile = '{% static 'xmls/haarcascade_frontalface_alt2.xml' %}';
+
+    // load pre-trained classifiers
+    faceCascade.load(faceCascadeFile);
+
+    // detect faces
+    let msize = new cv.Size(0, 0);
+
+    faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
+
+
+    /*try {
+        faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0);
+        console.info(faces.size());
+    }
+    catch(err) {
+        console.info(err);
+    }*/
+
+
+    for (let i = 0; i < faces.size(); ++i) {
+        let roiGray = gray.roi(faces.get(i));
+        let roiSrc = src.roi(faces.get(i));
+        let point1 = new cv.Point(faces.get(i).x, faces.get(i).y);
+        let point2 = new cv.Point(faces.get(i).x + faces.get(i).width,
+                                  faces.get(i).y + faces.get(i).height);
+        cv.rectangle(src, point1, point2, [255, 0, 0, 255]);
+        roiGray.delete(); roiSrc.delete();
+    }
+
+    cv.imshow('canvasOutput', src);
+    src.delete(); gray.delete(); faceCascade.delete();
+}
+</script>
+</body>
+</html>
