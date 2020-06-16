@@ -23,3 +23,5 @@ VID_IN = CWD + '/vid/vid_input/'
 VID_OUT = CWD + '/vid/vid_output/'
 
 CASCADE = CWD + '/data/'
+
+ATT_IMG = CWD + '/att_img/'
