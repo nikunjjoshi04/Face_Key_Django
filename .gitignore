@@ -1,2 +1,5 @@
 face_key/face_key/settings/dev_home.py
 face_key/db.sqlite3
+face_key/static/files
+face_key/static/train_images
+
